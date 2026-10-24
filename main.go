@@ -15,6 +15,7 @@ import (
 	"os"
 	"os/signal"
 	"path/filepath"
+	"runtime/debug"
 	"strings"
 	"sync"
 	"time"
@@ -24,6 +25,17 @@ import (
 
 // version is set at release time with -ldflags "-X main.version=...".
 var version = "dev"
+
+// buildVersion is version, or the module version for a `go install` build.
+func buildVersion() string {
+	if version != "dev" {
+		return version
+	}
+	if bi, ok := debug.ReadBuildInfo(); ok && bi.Main.Version != "" && bi.Main.Version != "(devel)" {
+		return bi.Main.Version
+	}
+	return version
+}
 
 const usage = `wordpress-to-astro converts a public WordPress site into an Astro project.
 
@@ -77,7 +89,7 @@ func run(args []string, stdout, stderr io.Writer) int {
 		return 2
 	}
 	if opts.version {
-		fmt.Fprintln(stdout, "wordpress-to-astro", version)
+		fmt.Fprintln(stdout, "wordpress-to-astro", buildVersion())
 		return 0
 	}
 
@@ -97,8 +109,8 @@ func run(args []string, stdout, stderr io.Writer) int {
 			conv.PreviewLimits.Timeout = opts.timeout
 		}
 	}
-	if version != "dev" {
-		conv.UserAgent = "wordpress-to-astro/" + strings.TrimPrefix(version, "v") + " (+https://github.com/InstaPods/wordpress-to-astro)"
+	if v := buildVersion(); v != "dev" {
+		conv.UserAgent = "wordpress-to-astro/" + strings.TrimPrefix(v, "v") + " (+https://github.com/InstaPods/wordpress-to-astro)"
 	}
 
 	if opts.dryRun {
@@ -360,12 +372,14 @@ func shellQuote(s string) string {
 // progress prints one updating status line on a terminal, and nothing when
 // stderr is a file or pipe (or with --quiet).
 type progress struct {
-	mu     sync.Mutex
-	w      io.Writer
-	on     bool
-	tty    bool
-	last   time.Time
-	active bool
+	mu           sync.Mutex
+	throttled    int
+	lastThrottle time.Time
+	w            io.Writer
+	on           bool
+	tty          bool
+	last         time.Time
+	active       bool
 }
 
 func newProgress(w io.Writer, quiet bool) *progress {
@@ -394,9 +408,19 @@ func (p *progress) update(stage string, done, total int) {
 		return
 	}
 	if stage == "throttled" {
-		// Always shown: otherwise a long wait looks like a hang.
+		// Shown even off a terminal, or a long wait looks like a hang; but
+		// at most every 15 seconds, or a burst of retries floods the output.
+		p.throttled++
+		if time.Since(p.lastThrottle) < 15*time.Second {
+			return
+		}
 		p.done()
-		fmt.Fprintf(p.w, "The site is rate-limiting requests (HTTP 429); waiting %s and retrying.\n", time.Duration(done)*time.Millisecond)
+		more := ""
+		if p.throttled > 1 {
+			more = fmt.Sprintf(" (%d waits so far)", p.throttled)
+		}
+		fmt.Fprintf(p.w, "The site is rate-limiting requests (HTTP 429); waiting %s and retrying%s.\n", time.Duration(done)*time.Millisecond, more)
+		p.lastThrottle = time.Now()
 		return
 	}
 	p.last = time.Now()

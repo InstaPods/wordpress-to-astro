@@ -19,7 +19,7 @@ import (
 )
 
 // Version is the library version, used in the default User-Agent.
-const Version = "0.1.0"
+const Version = "0.1.1"
 
 // DefaultUserAgent identifies the converter to the sites it reads.
 const DefaultUserAgent = "wordpress-to-astro/" + Version + " (+https://github.com/InstaPods/wordpress-to-astro)"

@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.1
+
+- An image CDN copy that is rate-limited (Jetpack's `i0.wp.com` answers HTTP 429 to a burst) falls back to the original file straight away instead of waiting out the limit, which used up the retry budget on image-heavy sites.
+- Rate-limit messages are printed at most every 15 seconds.
+- `--version` reports the module version for `go install` builds.
+
 ## 0.1.0
 
 First public release.

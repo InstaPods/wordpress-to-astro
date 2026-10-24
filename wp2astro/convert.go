@@ -1255,12 +1255,14 @@ func (c *wpConversion) downloadImages(ctx context.Context) {
 				if fetch == "" {
 					fetch = abs
 				}
-				body := c.fetchImage(ctx, fetch, left)
+				// A CDN copy that fails goes straight to the original: no
+				// point waiting out the CDN's rate limit.
+				body := c.fetchImage(ctx, fetch, left, fetch == abs)
 				if body == nil && fetch != abs {
 					// The image CDN's resized copy failed (Jetpack's CDN
 					// rate-limits a burst): the original on the site is the
 					// same picture, just bigger.
-					body = c.fetchImage(ctx, abs, left)
+					body = c.fetchImage(ctx, abs, left, true)
 				}
 				if body != nil {
 					mu.Lock()
@@ -1320,11 +1322,11 @@ var imageExts = map[string]bool{
 	".svg": true, ".avif": true, ".ico": true, ".bmp": true,
 }
 
-// fetchImage downloads one image, retrying an HTTP 429 from the same retry
-// budget as the REST calls. It returns nil on any failure.
-func (c *wpConversion) fetchImage(ctx context.Context, fetchURL string, left int64) []byte {
+// fetchImage downloads one image. With retry, an HTTP 429 is retried from
+// the same budget as the REST calls. It returns nil on any failure.
+func (c *wpConversion) fetchImage(ctx context.Context, fetchURL string, left int64, retry bool) []byte {
 	body, hdr, status := c.fetchImageOnce(ctx, fetchURL, left)
-	if status == http.StatusTooManyRequests && c.rest.backoff(ctx, hdr) {
+	if retry && status == http.StatusTooManyRequests && c.rest.backoff(ctx, hdr) {
 		body, _, _ = c.fetchImageOnce(ctx, fetchURL, left)
 	}
 	return body
