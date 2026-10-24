@@ -1,0 +1,50 @@
+name: A conversion came out wrong
+description: Posts missing, broken formatting, wrong URLs, images not downloaded, an error.
+labels: ["conversion"]
+body:
+  - type: input
+    id: url
+    attributes:
+      label: Site URL
+      description: The address you passed to wordpress-to-astro. If you'd rather not share it publicly, say so and describe the site instead.
+      placeholder: https://example.com/blog/
+    validations:
+      required: true
+  - type: input
+    id: wp-version
+    attributes:
+      label: WordPress version
+      description: Shown in the WordPress admin footer, or in the `<meta name="generator">` tag of the page source. "Unknown" is fine.
+      placeholder: "6.8"
+    validations:
+      required: true
+  - type: input
+    id: command
+    attributes:
+      label: Command you ran
+      placeholder: npx wordpress-to-astro https://example.com --max-posts 50
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: wordpress-to-astro version
+      description: Output of `npx wordpress-to-astro --version`.
+  - type: textarea
+    id: what
+    attributes:
+      label: What went wrong
+      description: Which post or page, what you expected, what you got. A link to the original post helps a lot.
+    validations:
+      required: true
+  - type: textarea
+    id: output
+    attributes:
+      label: Output
+      description: The terminal output, or the relevant part of MIGRATION-NOTES.md.
+      render: text
+  - type: input
+    id: plugins
+    attributes:
+      label: Page builder or notable plugins
+      description: Elementor, Divi, Jetpack, a security plugin that limits the REST API, and so on.

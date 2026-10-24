@@ -1,0 +1,64 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*.*.*"]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing tag to (re)publish, e.g. v0.1.0. The GitHub release is skipped if it exists.
+        required: true
+
+permissions:
+  contents: write
+  id-token: write # npm provenance
+
+env:
+  TAG: ${{ inputs.tag || github.ref_name }}
+  NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TAG }}
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://registry.npmjs.org
+      - run: go test -count=1 ./...
+      - name: Check the tag matches the library version
+        run: |
+          want="${TAG#v}"
+          grep -q "const Version = \"$want\"" wp2astro/header.go || { echo "wp2astro.Version is not $want"; exit 1; }
+      - name: Build binaries
+        run: scripts/build.sh "$TAG"
+      - name: GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view "$TAG" > /dev/null 2>&1; then echo "release $TAG exists"; exit 0; fi
+          gh release create "$TAG" --verify-tag --title "$TAG" \
+            --notes "See [CHANGELOG.md](https://github.com/${GITHUB_REPOSITORY}/blob/main/CHANGELOG.md). Run with \`npx wordpress-to-astro <url>\`, or \`go install github.com/instapods/wordpress-to-astro@$TAG\`, or download a binary below." \
+            dist/*.tar.gz dist/*.zip dist/checksums.txt
+      - name: Publish to npm
+        if: env.NPM_TOKEN != ''
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          node scripts/npm-packages.mjs "$TAG"
+          version="${TAG#v}"
+          # Platform packages first: the main package depends on them.
+          for d in npm/dist/wordpress-to-astro-*/ npm/dist/wordpress-to-astro/; do
+            name=$(node -p "require('./$d/package.json').name")
+            if npm view "$name@$version" version > /dev/null 2>&1; then echo "$name@$version already published"; continue; fi
+            (cd "$d" && npm publish --access public --provenance)
+          done
+      - name: No npm token
+        if: env.NPM_TOKEN == ''
+        run: echo "::warning::NPM_TOKEN is not set, so nothing was published to npm. Add the secret and re-run with workflow_dispatch tag=$TAG."

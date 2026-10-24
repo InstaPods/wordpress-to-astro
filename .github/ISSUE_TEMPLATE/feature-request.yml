@@ -1,0 +1,15 @@
+name: Feature request
+description: Something the converter should carry across or do differently.
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What would you like it to do?
+    validations:
+      required: true
+  - type: input
+    id: url
+    attributes:
+      label: An example site, if there is one
+      placeholder: https://example.com

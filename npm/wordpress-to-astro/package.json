@@ -1,0 +1,22 @@
+{
+  "name": "wordpress-to-astro",
+  "version": "0.0.0",
+  "description": "Convert a public WordPress site into an Astro project: Markdown posts and pages, images, permalinks kept, redirects, RSS and sitemap.",
+  "keywords": ["wordpress", "astro", "migration", "wordpress-to-astro", "static-site", "markdown", "cli", "converter"],
+  "homepage": "https://github.com/InstaPods/wordpress-to-astro#readme",
+  "bugs": "https://github.com/InstaPods/wordpress-to-astro/issues",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/InstaPods/wordpress-to-astro.git"
+  },
+  "license": "MIT",
+  "author": "InstaPods (https://instapods.com)",
+  "bin": {
+    "wordpress-to-astro": "bin/wordpress-to-astro.js"
+  },
+  "files": ["bin/"],
+  "engines": {
+    "node": ">=16"
+  },
+  "optionalDependencies": {}
+}

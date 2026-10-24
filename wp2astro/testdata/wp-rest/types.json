@@ -1,0 +1,97 @@
+{
+ "post": {
+  "slug": "post",
+  "name": "Posts",
+  "rest_base": "posts"
+ },
+ "page": {
+  "slug": "page",
+  "name": "Pages",
+  "rest_base": "pages"
+ },
+ "attachment": {
+  "slug": "attachment",
+  "name": "Media",
+  "rest_base": "media"
+ },
+ "nav_menu_item": {
+  "slug": "nav_menu_item",
+  "name": "Navigation Menu Items",
+  "rest_base": "menu-items"
+ },
+ "wp_block": {
+  "slug": "wp_block",
+  "name": "Patterns",
+  "rest_base": "blocks"
+ },
+ "wp_template": {
+  "slug": "wp_template",
+  "name": "Templates",
+  "rest_base": "templates"
+ },
+ "wp_template_part": {
+  "slug": "wp_template_part",
+  "name": "Template Parts",
+  "rest_base": "template-parts"
+ },
+ "wp_global_styles": {
+  "slug": "wp_global_styles",
+  "name": "Global Styles",
+  "rest_base": "global-styles"
+ },
+ "wp_navigation": {
+  "slug": "wp_navigation",
+  "name": "Navigation Menus",
+  "rest_base": "navigation"
+ },
+ "wp_font_family": {
+  "slug": "wp_font_family",
+  "name": "Font Families",
+  "rest_base": "font-families"
+ },
+ "wp_font_face": {
+  "slug": "wp_font_face",
+  "name": "Font Faces",
+  "rest_base": "font-families/(?P<font_family_id>[\\d]+)/font-faces"
+ },
+ "jp_search_overlay": {
+  "slug": "jp_search_overlay",
+  "name": "Search overlay template",
+  "rest_base": "jetpack-search-overlay"
+ },
+ "feedback": {
+  "slug": "feedback",
+  "name": "Form Responses",
+  "rest_base": "feedback"
+ },
+ "jetpack_form": {
+  "slug": "jetpack_form",
+  "name": "Forms",
+  "rest_base": "jetpack-forms"
+ },
+ "jp_act_log_event": {
+  "slug": "jp_act_log_event",
+  "name": "Activity Log Events",
+  "rest_base": "activity-log-events"
+ },
+ "jp_pay_order": {
+  "slug": "jp_pay_order",
+  "name": "Order",
+  "rest_base": "jp_pay_order"
+ },
+ "jp_pay_product": {
+  "slug": "jp_pay_product",
+  "name": "Product",
+  "rest_base": "jp_pay_product"
+ },
+ "podcast": {
+  "slug": "podcast",
+  "name": "Episode",
+  "rest_base": "podcast"
+ },
+ "product": {
+  "slug": "product",
+  "name": "Products",
+  "rest_base": "product"
+ }
+}

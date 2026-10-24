@@ -1,0 +1,30 @@
+[
+ {
+  "id": 5,
+  "count": 378,
+  "link": "http://wp.example/news/category/development/",
+  "name": "Development",
+  "slug": "development"
+ },
+ {
+  "id": 10,
+  "count": 129,
+  "link": "http://wp.example/news/category/general/",
+  "name": "General",
+  "slug": "general"
+ },
+ {
+  "id": 14,
+  "count": 484,
+  "link": "http://wp.example/news/category/releases/",
+  "name": "Releases",
+  "slug": "releases"
+ },
+ {
+  "id": 15,
+  "count": 94,
+  "link": "http://wp.example/news/category/security/",
+  "name": "Security",
+  "slug": "security"
+ }
+]

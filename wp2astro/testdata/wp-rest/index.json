@@ -1,0 +1,31 @@
+{
+ "name": "WordPress News",
+ "description": "The latest news about WordPress and the WordPress community",
+ "url": "http://wp.example/news",
+ "home": "http://wp.example/news",
+ "namespaces": [
+  "oembed/1.0",
+  "wporg/v1",
+  "global-header-footer/v1",
+  "akismet/v1",
+  "jetpack/v4",
+  "wporg-two-factor/1.0",
+  "ssp/v1",
+  "wpcom/v2",
+  "jetpack/v4/stats-app",
+  "jetpack-boost/v1",
+  "my-jetpack/v1",
+  "jetpack/v4/explat",
+  "jetpack/v4/blaze-app",
+  "jetpack/v4/blaze",
+  "two-factor/1.0",
+  "jetpack/v4/import",
+  "videopress/v1",
+  "jetpack/v4/videopress",
+  "wpcom/v3",
+  "wp/v2",
+  "wp-site-health/v1",
+  "wp-block-editor/v1",
+  "wp-abilities/v1"
+ ]
+}

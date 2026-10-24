@@ -1,0 +1,18 @@
+[
+ {
+  "id": 21712,
+  "title": {
+   "rendered": "image"
+  },
+  "alt_text": "",
+  "source_url": "http://wp.example/news/files/2026/09/image-3.png"
+ },
+ {
+  "id": 21247,
+  "title": {
+   "rendered": "wordpress-7-1-beta4"
+  },
+  "alt_text": "",
+  "source_url": "http://wp.example/news/files/2026/07/wordpress-7-1-beta4.png"
+ }
+]

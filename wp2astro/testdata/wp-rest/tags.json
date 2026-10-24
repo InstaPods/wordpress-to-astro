@@ -1,0 +1,37 @@
+[
+ {
+  "id": 640,
+  "count": 5,
+  "link": "http://wp.example/news/tag/7-1/",
+  "name": "7-1",
+  "slug": "7-1"
+ },
+ {
+  "id": 184,
+  "count": 75,
+  "link": "http://wp.example/news/tag/development/",
+  "name": "development",
+  "slug": "development"
+ },
+ {
+  "id": 648,
+  "count": 1,
+  "link": "http://wp.example/news/tag/open-website-alliance/",
+  "name": "Open Website Alliance",
+  "slug": "open-website-alliance"
+ },
+ {
+  "id": 647,
+  "count": 1,
+  "link": "http://wp.example/news/tag/owa/",
+  "name": "owa",
+  "slug": "owa"
+ },
+ {
+  "id": 183,
+  "count": 13,
+  "link": "http://wp.example/news/tag/release/",
+  "name": "release",
+  "slug": "release"
+ }
+]

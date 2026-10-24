@@ -1,0 +1,11 @@
+{
+ "recorded_from": "https://wordpress.org/news/ (public WordPress REST API). Hosts rewritten to wp.example; types.json gained a hand-added \"product\" type to exercise the custom-type note.",
+ "recorded_at": "2026-10-24",
+ "comments_total": 234,
+ "post_ids": [
+  21835,
+  21709,
+  20214,
+  21243
+ ]
+}

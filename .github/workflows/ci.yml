@@ -1,0 +1,63 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - name: gofmt
+        if: runner.os == 'Linux'
+        run: test -z "$(gofmt -l .)" || (gofmt -l . && exit 1)
+      - run: go vet ./...
+      - run: go test -race -count=1 ./...
+        if: runner.os == 'Linux'
+      - run: go test -count=1 ./...
+        if: runner.os != 'Linux'
+
+  npm-smoke:
+    # Builds every binary, stages the npm packages and runs the CLI through
+    # the npm wrapper, the way `npx wordpress-to-astro` does.
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Build binaries
+        shell: bash
+        run: NO_ARCHIVE=1 scripts/build.sh v0.0.0-ci
+      - name: Stage and pack npm packages
+        shell: bash
+        run: |
+          node scripts/npm-packages.mjs v0.0.0-ci
+          mkdir -p "$RUNNER_TEMP/tgz"
+          for d in npm/dist/*/; do (cd "$d" && npm pack --silent --pack-destination "$RUNNER_TEMP/tgz"); done
+      - name: Install and run through the wrapper
+        shell: bash
+        run: |
+          mkdir -p "$RUNNER_TEMP/app" && cd "$RUNNER_TEMP/app" && npm init -y > /dev/null
+          plat=$(node -p 'process.platform + "-" + process.arch')
+          npm install --no-audit --no-fund "$RUNNER_TEMP/tgz/wordpress-to-astro-$plat-0.0.0-ci.tgz" "$RUNNER_TEMP/tgz/wordpress-to-astro-0.0.0-ci.tgz"
+          npx --no-install wordpress-to-astro --version | grep -q v0.0.0-ci
+          set +e; npx --no-install wordpress-to-astro > /dev/null 2>&1; code=$?; set -e
+          test "$code" = 2
