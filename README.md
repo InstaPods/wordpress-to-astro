@@ -151,6 +151,14 @@ your-site-astro/
 
 Dependencies are `astro` 5, `@astrojs/rss` and `@astrojs/sitemap`. Nothing else.
 
+## Other ways to move WordPress to Astro
+
+Pick the tool that fits how you are moving:
+
+- **You have the WordPress export file, or want drafts too:** [wordpress-export-to-markdown](https://github.com/lonekorean/wordpress-export-to-markdown) converts the XML export (posts, pages, drafts and custom post types) into Markdown with frontmatter and downloads the images. It writes Markdown for any static site generator, so routes and redirects are yours to set up.
+- **You are keeping WordPress as your CMS:** [DeWP](https://delucis.github.io/dewp/) loads WordPress content into Astro content collections from the REST API, so editors keep using wp-admin.
+- **You are leaving WordPress and want a working site today:** this tool. It reads the live site with nothing to export or install on the WordPress side, and writes a complete Astro project with every post at its current URL, a redirects map for the few that have to move, and HTML kept as-is where a block does not convert. It is a plain converter with no AI model in the loop, so there are no tokens to pay for and you can rerun it and diff the output.
+
 ## Hosted version
 
 Prefer not to use a terminal? The same converter runs at [instapods.com/tools/wordpress-to-astro](https://instapods.com/tools/wordpress-to-astro/): paste your URL to see a preview of a converted post, then download the project as a zip.
